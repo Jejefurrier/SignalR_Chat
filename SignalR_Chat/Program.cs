@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Builder;
+using SignalR_Chat.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR(huboptions => {
+    huboptions.EnableDetailedErrors = true;
+});
 
 var app = builder.Build();
 
@@ -21,10 +27,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-})
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
